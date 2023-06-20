@@ -9,38 +9,52 @@ import {
   Typography,
 } from "@material-tailwind/react";
 import { FolderIcon, PlusIcon } from "@heroicons/react/24/solid";
+import { useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
 
 function WhiteBoard() {
+  const navigate = useNavigate();
   const [folderModalopen, setFolderModal] = useState(false);
   const [folders, setFolders] = useState([]);
   const [folderCreated, setFolderCreated] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   function fetchFolders() {
-    fetch("http://localhost:5050/")
+    fetch("http://localhost:5050/whiteboard")
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
         setFolders(data);
         setLoading(false);
       });
   }
   function createFolder() {
+    setError("");
     const title = document.querySelector("#folderName").value;
-    fetch("http://localhost:5050/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify( {title: title})
+    if (!title) {
+      setError("Please provide folder name.");
+      return;
+    }
+    fetch("http://localhost:5050/whiteboard", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ title: title, token: localStorage.getItem("token") }),
     })
-    .then(res => res.json())
-    .then(data => {
+      .then((res) => res.json())
+      .then((data) => {
         console.log(data);
         setFolderCreated(true);
         setFolderModal(!folderModalopen);
-    })
+      });
   }
-  const handleOpen = () => setFolderModal(!folderModalopen);
+  const handleOpen = () => {
+    setError("");
+    setFolderModal(!folderModalopen);
+  };
   useEffect(() => {
+    if (!localStorage.getItem("token")) {
+      navigate("/");
+      return;
+    }
     fetchFolders();
   }, [folderCreated]);
   return (
@@ -73,7 +87,10 @@ function WhiteBoard() {
           ) : (
             folders.map((elem, index) => {
               return (
-                <div key={index} className="border-2 border-fuchsia-900 w-full md:w-40 h-16 rounded-lg shadow-lg flex justify-center items-center">
+                <div
+                  key={index}
+                  className="border-2 border-fuchsia-900 w-full md:w-40 h-16 rounded-lg shadow-lg flex justify-center items-center"
+                >
                   <p className="text-md font-medium flex justify-center items-center gap-4">
                     <FolderIcon className="h-4 w-4"></FolderIcon> {elem.title}
                   </p>
@@ -95,6 +112,7 @@ function WhiteBoard() {
         >
           <DialogHeader>Create a folder</DialogHeader>
           <DialogBody divider>
+            {error ? <p className="text-red-500 text-center">{error}</p> : ""}
             <Input id="folderName" label="Folder name" />
           </DialogBody>
           <DialogFooter>
@@ -107,7 +125,7 @@ function WhiteBoard() {
               <span>Cancel</span>
             </Button>
             <Button variant="gradient" color="green" onClick={createFolder}>
-              <span>Confirm</span>
+              <span>Create</span>
             </Button>
           </DialogFooter>
         </Dialog>

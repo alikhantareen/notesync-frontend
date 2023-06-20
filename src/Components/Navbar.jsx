@@ -1,3 +1,5 @@
+import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import {
   Typography,
   List,
@@ -8,6 +10,21 @@ import {
 import { PresentationChartBarIcon, PowerIcon } from "@heroicons/react/24/solid";
 
 export default function Navbar() {
+  const navigate = useNavigate();
+  const [authenticated, setauthenticated] = useState(null);
+  const [id, profileID] = useState(null);
+  function logout() {
+    setauthenticated(null);
+    localStorage.clear();
+    navigate("/");
+  }
+  useEffect(() => {
+    const loggedInUser = localStorage.getItem("token");
+    if (loggedInUser) {
+      setauthenticated(loggedInUser);
+      profileID(localStorage.getItem("user_id"));
+    }
+  }, [authenticated]);
   return (
     <>
       <div className="drawer z-50">
@@ -43,7 +60,7 @@ export default function Navbar() {
             <div className="flex-none hidden lg:block">
               <ul className="menu menu-horizontal">
                 <li>
-                  <Button>Log out</Button>
+                  <Button onClick={logout}>Log out</Button>
                 </li>
               </ul>
             </div>
