@@ -10,7 +10,8 @@ export default function Login() {
     let email = document.querySelector("#email").value;
     let password = document.querySelector("#password").value;
     if (!email || !password) {
-      setError("Please enter email/password");
+      setError("Please provide required information.");
+      return;
     }
     fetch("http://localhost:5050/", {
       method: "POST",
@@ -19,7 +20,6 @@ export default function Login() {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         if (data.token) {
           localStorage.setItem("token", data.token);
           localStorage.setItem("user_email", data.user.email);
