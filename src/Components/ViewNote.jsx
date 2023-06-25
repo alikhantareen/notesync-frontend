@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Navbar from "./Navbar";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Button, Typography } from "@material-tailwind/react";
 import parse from "html-react-parser";
 
@@ -8,6 +8,7 @@ export default function ViewNote() {
   const { id } = useParams();
   const [loading, setLoading] = useState(true);
   const [note, setNote] = useState(null);
+  const navigate = useNavigate();
 
   function getNote(id) {
     fetch(`http://localhost:5050/myfolder/mynote/${id}`)
@@ -20,6 +21,20 @@ export default function ViewNote() {
         } else {
           alert(data.error);
           return;
+        }
+      });
+  }
+  function deleteNote(id, folder) {
+    fetch(`http://localhost:5050/note/${id}`, {
+      method: "DELETE",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        if (data.success) {
+          navigate(`/myfolder/${folder}`);
+        } else {
+          alert(data.error);
         }
       });
   }
@@ -44,7 +59,13 @@ export default function ViewNote() {
               <Typography className="p-2">{parse(note.description)}</Typography>
               <div className="w-full flex gap-4">
                 <Button className="w-full md:w-fit">Edit</Button>
-                <Button className="w-full md:w-fit" color="red">Delete</Button>
+                <Button
+                  className="w-full md:w-fit"
+                  color="red"
+                  onClick={() => deleteNote(note._id, note.folder)}
+                >
+                  Delete
+                </Button>
               </div>
             </div>
           )}
