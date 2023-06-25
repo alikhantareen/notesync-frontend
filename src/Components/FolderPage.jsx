@@ -13,14 +13,18 @@ export default function FolderPage() {
   const navigate = useNavigate();
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [title, folderTitle] = useState('');
   function fetchNotes(id) {
     fetch(`http://localhost:5050/myfolder/${id}`)
       .then((res) => res.json())
       .then((data) => {
-        setNotes(data);
+        setNotes(data.notes);
+        folderTitle(data.folderTitle.title);
         setLoading(false);
       });
+  }
+  function Title(elem) {
+    return elem.toUpperCase();
   }
   useEffect(() => {
     if (!localStorage.getItem("token")) {
@@ -35,8 +39,8 @@ export default function FolderPage() {
       <section className="w-full">
         <section className="w-full">
           <div className="w-full p-4 flex justify-between">
-            <Typography variant="h2" color="blue-gray">
-              {notes.title}
+            <Typography variant="h2" color="blue">
+              {Title(title)}
             </Typography>
           </div>
         </section>

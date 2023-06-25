@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import Navbar from "./Navbar";
 import { useParams } from "react-router-dom";
+import { Button, Typography } from "@material-tailwind/react";
+import parse from "html-react-parser";
 
 export default function ViewNote() {
   const { id } = useParams();
@@ -21,19 +23,33 @@ export default function ViewNote() {
         }
       });
   }
+  function Title(elem) {
+    return elem.toUpperCase();
+  }
   useEffect(() => {
     getNote(id);
   }, []);
   return (
     <>
       <Navbar />
-      {loading ? (
-        <p>Loading...</p>
-      ) : (
-        <div>
-          <p>{note.title}</p>
-        </div>
-      )}
+      <main className="w-full p-4 flex flex-col gap-4 justify-center items-center">
+        <section className="flex flex-col justify-center gap-4 w-full md:w-2/3 p-4 shadow-lg rounded-xl">
+          {loading ? (
+            <p>Loading...</p>
+          ) : (
+            <div className="flex flex-col gap-4">
+              <Typography variant="h2" color="blue">
+                {Title(note.title)}
+              </Typography>
+              <Typography className="p-2">{parse(note.description)}</Typography>
+              <div className="w-full flex gap-4">
+                <Button className="w-full md:w-fit">Edit</Button>
+                <Button className="w-full md:w-fit" color="red">Delete</Button>
+              </div>
+            </div>
+          )}
+        </section>
+      </main>
     </>
   );
 }
