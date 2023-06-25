@@ -4,9 +4,9 @@ import { useState, useEffect } from "react";
 
 export default function Login() {
   const navigate = useNavigate();
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   function login() {
-    setError('');
+    setError("");
     let email = document.querySelector("#email").value;
     let password = document.querySelector("#password").value;
     if (!email || !password) {
@@ -25,7 +25,7 @@ export default function Login() {
           localStorage.setItem("user_email", data.user.email);
           localStorage.setItem("username", data.user.username);
           localStorage.setItem("user_id", data.user._id);
-          navigate("/whiteboard");
+          navigate(`/whiteboard/${localStorage.getItem("user_id")}`);
         } else {
           setError("Username/Password invalid. Try again.");
         }
@@ -33,7 +33,7 @@ export default function Login() {
   }
   useEffect(() => {
     if (localStorage.getItem("token")) {
-      navigate("/whiteboard");
+      navigate(`/whiteboard/${localStorage.getItem("user_id")}`);
     }
   }, []);
   return (
@@ -54,13 +54,7 @@ export default function Login() {
                   Pinned.
                 </Typography>
               </h1>
-              {error ? (
-                <p className="text-red-500 text-center">
-                  {error}
-                </p>
-              ) : (
-                ""
-              )}
+              {error ? <p className="text-red-500 text-center">{error}</p> : ""}
             </div>
             <div class="divide-y divide-gray-200">
               <div class="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">

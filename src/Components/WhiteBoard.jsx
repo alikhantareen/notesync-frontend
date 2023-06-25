@@ -9,39 +9,44 @@ import {
   Typography,
 } from "@material-tailwind/react";
 import { FolderIcon, PlusIcon } from "@heroicons/react/24/solid";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams, Link } from "react-router-dom";
 import Navbar from "./Navbar";
 
 function WhiteBoard() {
   const navigate = useNavigate();
+  const { id } = useParams();
   const [folderModalopen, setFolderModal] = useState(false);
   const [folders, setFolders] = useState([]);
   const [folderCreated, setFolderCreated] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  function fetchFolders() {
-    fetch("http://localhost:5050/whiteboard")
+  function fetchFolders(id) {
+    fetch(`http://localhost:5050/whiteboard/${id}`)
       .then((res) => res.json())
       .then((data) => {
         setFolders(data);
         setLoading(false);
       });
   }
-  function createFolder() {
+  function createFolder(id) {
+    setFolderCreated(false);
     setError("");
     const title = document.querySelector("#folderName").value;
     if (!title) {
       setError("Please provide folder name.");
       return;
     }
-    fetch("http://localhost:5050/whiteboard", {
+    fetch(`http://localhost:5050/whiteboard/${id}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title: title, token: localStorage.getItem("token") }),
+      body: JSON.stringify({
+        user: localStorage.getItem("user_id"),
+        title: title,
+        token: localStorage.getItem("token"),
+      }),
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
         setFolderCreated(true);
         setFolderModal(!folderModalopen);
       });
@@ -55,7 +60,7 @@ function WhiteBoard() {
       navigate("/");
       return;
     }
-    fetchFolders();
+    fetchFolders(id);
   }, [folderCreated]);
   return (
     <main>
@@ -63,17 +68,12 @@ function WhiteBoard() {
       <section className="w-full">
         <section className="w-full">
           <div className="w-full p-4 flex justify-between">
-            <Typography variant="h2" color="blue-gray">
+            <Typography variant="h2" color="blue">
               Whiteboard
             </Typography>
           </div>
         </section>
-        <section className="flex flex-col md:flex-row justify-between w-full">
-          <Typography variant="h4" className="p-4">
-            My folders
-          </Typography>
-        </section>
-        <section className="p-4 flex flex-col md:flex-row gap-6 md:gap-4">
+        <section className="p-4 flex flex-col md:flex-row md:items-center gap-6 md:gap-4">
           <div
             onClick={handleOpen}
             className="border-2 border-fuchsia-900 w-full md:w-20 h-16 rounded-lg shadow-lg flex justify-center items-center cursor-pointer"
@@ -81,23 +81,25 @@ function WhiteBoard() {
             <p className="text-md font-medium flex justify-center items-center gap-4">
               <PlusIcon className="h-6 w-6 font-bold"></PlusIcon>
             </p>
+            <p></p>
           </div>
+          <div className="flex flex-wrap md:gap-6">
           {loading ? (
             <p>Loading...</p>
           ) : (
             folders.map((elem, index) => {
               return (
-                <div
-                  key={index}
-                  className="border-2 border-fuchsia-900 w-full md:w-40 h-16 rounded-lg shadow-lg flex justify-center items-center"
-                >
-                  <p className="text-md font-medium flex justify-center items-center gap-4">
-                    <FolderIcon className="h-4 w-4"></FolderIcon> {elem.title}
-                  </p>
-                </div>
+                <Link className="w-1/2 md:w-auto flex flex-col justify-start items-center" to={`/myfolder/${elem._id}`}>
+                  <FolderIcon
+                    key={index}
+                    className="w-16 h-16 text-yellow-700"
+                  ></FolderIcon>{" "}
+                  <Typography variant="small">{elem.title}</Typography>
+                </Link>
               );
             })
           )}
+          </div>
         </section>
       </section>
 
@@ -124,7 +126,11 @@ function WhiteBoard() {
             >
               <span>Cancel</span>
             </Button>
-            <Button variant="gradient" color="green" onClick={createFolder}>
+            <Button
+              variant="gradient"
+              color="green"
+              onClick={() => createFolder()}
+            >
               <span>Create</span>
             </Button>
           </DialogFooter>

@@ -65,13 +65,13 @@ export default function Signup() {
           localStorage.setItem("user_email", data.user.email);
           localStorage.setItem("username", data.user.username);
           localStorage.setItem("user_id", data.user._id);
-          navigate("/whiteboard");
+          navigate(`/whiteboard/${localStorage.getItem("user_id")}`);
         }
       });
   }
   useEffect(() => {
     if (localStorage.getItem("token")) {
-      navigate("/whiteboard");
+        navigate(`/whiteboard/${localStorage.getItem("user_id")}`);
     }
   }, []);
   return (
