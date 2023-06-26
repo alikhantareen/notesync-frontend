@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import Navbar from "./Navbar";
 import { Editor } from "@tinymce/tinymce-react";
 import { Button, Input, Typography } from "@material-tailwind/react";
@@ -52,7 +52,7 @@ export default function AddNote() {
             Create a note
           </Typography>
           {error ? <p className="text-red-500">{error}</p> : ""}
-          <Input id="noteTitle" label="Title" />
+          <Input className="bg-white" id="noteTitle" label="Title" />
           <Editor
             apiKey="27tp408napsi18tfhf042ha3cncbzn6eb22y9e8hp1gdtld5"
             onInit={(evt, editor) => (editorRef.current = editor)}

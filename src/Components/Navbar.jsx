@@ -76,7 +76,7 @@ export default function Navbar() {
                 textGradient
                 className="flex-1 mx-2"
               >
-                Pinned.
+                NoteSync.
               </Typography>
             </Link>
             <div className="flex justify-center items-center gap-3">
@@ -117,7 +117,7 @@ export default function Navbar() {
                 textGradient
                 className="px-2"
               >
-                Pinned.
+                NoteSync.
               </Typography>
             </div>
             <List>

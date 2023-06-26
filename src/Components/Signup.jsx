@@ -89,7 +89,7 @@ export default function Signup() {
                   textGradient
                   className="flex-1 mx-2"
                 >
-                  Pinned.
+                  NoteSync.
                 </Typography>
               </h1>
             </div>

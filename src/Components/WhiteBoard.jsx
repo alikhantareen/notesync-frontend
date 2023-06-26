@@ -8,7 +8,7 @@ import {
   Input,
   Typography,
 } from "@material-tailwind/react";
-import { FolderIcon, PlusIcon } from "@heroicons/react/24/solid";
+import { FolderIcon, PlusIcon, PresentationChartBarIcon } from "@heroicons/react/24/solid";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import Navbar from "./Navbar";
 
@@ -67,29 +67,30 @@ function WhiteBoard() {
       <Navbar />
       <section className="w-full">
         <section className="w-full">
-          <div className="w-full p-4 flex justify-between">
+          <div className="w-full p-4 flex justify-start gap-4 items-center">
+            <PresentationChartBarIcon className="w-10 h-10 text-blue-700"></PresentationChartBarIcon>
             <Typography variant="h2" color="blue">
               Whiteboard
             </Typography>
           </div>
         </section>
         <section className="p-4 flex flex-col md:flex-row md:items-center gap-6 md:gap-4">
-          <div
+          <Button
+            variant="outlined"
             onClick={handleOpen}
-            className="border-2 border-fuchsia-900 w-full md:w-20 h-16 rounded-lg shadow-lg flex justify-center items-center cursor-pointer"
+            className="w-full md:w-16 h-16 rounded-full shadow-lg flex justify-center items-center cursor-pointer"
           >
             <p className="text-md font-medium flex justify-center items-center gap-4">
               <PlusIcon className="h-6 w-6 font-bold"></PlusIcon>
             </p>
-            <p></p>
-          </div>
+          </Button>
           <div className="flex flex-wrap md:gap-6">
           {loading ? (
             <p>Loading...</p>
           ) : (
             folders.map((elem, index) => {
               return (
-                <Link className="w-1/2 md:w-auto flex flex-col justify-start items-center" to={`/myfolder/${elem._id}`}>
+                <Link className="w-1/2 md:w-auto flex flex-col justify-start items-center hover:-translate-y-2 duration-500" to={`/myfolder/${elem._id}`}>
                   <FolderIcon
                     key={index}
                     className="w-16 h-16 text-yellow-700"

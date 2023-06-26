@@ -51,7 +51,7 @@ export default function Login() {
                   textGradient
                   className="flex-1 mx-2"
                 >
-                  Pinned.
+                  NoteSync.
                 </Typography>
               </h1>
               {error ? <p className="text-red-500 text-center">{error}</p> : ""}
