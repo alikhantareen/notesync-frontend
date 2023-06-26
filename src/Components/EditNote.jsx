@@ -65,6 +65,10 @@ export default function EditNote() {
       });
   }
   useEffect(() => {
+    if (!localStorage.getItem("token")) {
+      navigate("/");
+      return;
+    }
     getNote(id);
   }, []);
   return (

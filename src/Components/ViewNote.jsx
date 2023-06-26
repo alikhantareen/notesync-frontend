@@ -54,6 +54,10 @@ export default function ViewNote() {
     return elem.toUpperCase();
   }
   useEffect(() => {
+    if (!localStorage.getItem("token")) {
+      navigate("/");
+      return;
+    }
     getNote(id);
   }, []);
   return (

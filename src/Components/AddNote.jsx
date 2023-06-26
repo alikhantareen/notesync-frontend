@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Navbar from "./Navbar";
 import { Editor } from "@tinymce/tinymce-react";
 import { Button, Input, Typography } from "@material-tailwind/react";
@@ -43,6 +43,12 @@ export default function AddNote() {
         }
       });
   }
+  useEffect(() => {
+    if (!localStorage.getItem("token")) {
+      navigate("/");
+      return;
+    }
+  }, [])
   return (
     <>
       <Navbar />
